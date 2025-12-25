@@ -12,32 +12,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-
-      - name: Build binary
-        run: |
-          cd cmd/server
-          go build -o blog-server
-
-      - name: Sync files to EC2
-        uses: rsync-deployments/ssh-deploy@v2.0.2
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.EC2_HOST }}
-          REMOTE_USER: ec2-user
-          TARGET: /home/ec2-user/portfolio-backend-go/
-          SOURCE: ./
-
-      - name: Restart service on EC2
+      - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/portfolio-backend-go/cmd/server
+            cd ~/portfolio-backend-go
+            git pull origin main
+            cd cmd/server
             go build -o blog-server
             sudo systemctl restart blog
