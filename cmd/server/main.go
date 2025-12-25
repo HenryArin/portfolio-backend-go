@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/henryarin/portfolio-backend-go/internal/api"
+	admin "github.com/henryarin/portfolio-backend-go/internal/api/admin"
 	"github.com/henryarin/portfolio-backend-go/internal/config"
 	"github.com/henryarin/portfolio-backend-go/internal/db"
 	"github.com/henryarin/portfolio-backend-go/internal/middleware"
@@ -23,6 +24,11 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/posts", api.ListPosts)
 	mux.HandleFunc("/api/posts/", api.GetPostBySlug)
+
+	mux.HandleFunc(
+		"/api/admin/posts",
+		admin.CreatePost(database, cfg.AdminToken),
+	)
 
 	handler := middleware.CORS(cfg.AllowedOrigin, mux)
 

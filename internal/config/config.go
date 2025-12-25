@@ -6,16 +6,16 @@ type Config struct {
 	Port          string
 	AllowedOrigin string
 	DBPath        string
+	AdminToken    string
 }
 
 func Load() Config {
-	cfg := Config{
+	return Config{
 		Port:          getEnv("PORT", "8080"),
 		AllowedOrigin: getEnv("ALLOWED_ORIGIN", "*"),
 		DBPath:        getEnv("DB_PATH", "blog.db"),
+		AdminToken:    getEnv("ADMIN_TOKEN", ""),
 	}
-
-	return cfg
 }
 
 func getEnv(key, fallback string) string {
