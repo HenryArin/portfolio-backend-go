@@ -3,9 +3,14 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/henryarin/portfolio-backend-go/internal/config"
+	"github.com/henryarin/portfolio-backend-go/internal/middleware"
 )
 
 func main() {
+	cfg := config.Load()
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -13,6 +18,8 @@ func main() {
 		w.Write([]byte("ok"))
 	})
 
-	log.Println("listening on :8080")
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	handler := middleware.CORS(cfg.AllowedOrigin, mux)
+
+	log.Println("listening on :" + cfg.Port)
+	log.Fatal(http.ListenAndServe(":"+cfg.Port, handler))
 }
