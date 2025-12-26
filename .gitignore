@@ -9,8 +9,7 @@
 # OS
 .DS_Store
 
-
-# local database
+# database
 blog.db
 
 
