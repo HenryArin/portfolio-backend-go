@@ -1,6 +1,10 @@
 package config
 
-import "os"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
 	Port          string
@@ -10,6 +14,8 @@ type Config struct {
 }
 
 func Load() Config {
+	godotenv.Load()
+
 	return Config{
 		Port:          getEnv("PORT", "8080"),
 		AllowedOrigin: getEnv("ALLOWED_ORIGIN", "*"),
